@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Users
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && incoming().uid == userId
+        && incoming().keys().hasAll(['uid', 'email'])
+        && incoming().email is string;
+      allow update: if isOwner(userId)
+        && incoming().uid == existing().uid;
+        
+      // Subcollections
+      match /notes/{noteId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(noteId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId)
+          && incoming().userId == userId;
+        allow delete: if isOwner(userId);
+      }
+
+      match /tasks/{taskId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(taskId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId)
+          && incoming().userId == userId;
+        allow delete: if isOwner(userId);
+      }
+
+      match /subjects/{subjectId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(subjectId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId)
+          && incoming().userId == userId;
+        allow delete: if isOwner(userId);
+      }
+
+      match /timetable/{entryId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(entryId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId)
+          && incoming().userId == userId;
+        allow delete: if isOwner(userId);
+      }
+
+      match /sessions/{sessionId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(sessionId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId)
+          && incoming().userId == userId;
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

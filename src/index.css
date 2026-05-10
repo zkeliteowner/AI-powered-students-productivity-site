@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-primary: #4F46E5; /* Indigo 600 */
+  --color-brand-secondary: #818CF8; /* Indigo 400 */
+  --color-brand-accent: #A855F7; /* Purple 500 */
+  
+  --bg-app-gradient: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #f472b6 100%);
+  --bg-light-glass: rgba(255, 255, 255, 0.4);
+  --bg-header-glass: rgba(255, 255, 255, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-fixed text-slate-800 font-sans antialiased;
+    background: var(--bg-app-gradient);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-white/40 border border-white/30 shadow-lg;
+  }
+  
+  .glass-header {
+    @apply backdrop-blur-md bg-white/20 border-b border-white/30;
+  }
+  
+  .glass-card {
+    @apply backdrop-blur-sm bg-white/60 border border-white/50 rounded-3xl shadow-xl;
+  }
+  
+  .glass-sidebar {
+    @apply backdrop-blur-xl bg-white/40 border-r border-white/30;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-linear-to-r from-indigo-600 via-purple-500 to-pink-500;
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.2), 0 0 60px rgba(79, 70, 229, 0.1);
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "university": { "type": "string" },
+        "major": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "theme": { "type": "string", "enum": ["light", "dark", "system"] },
+            "accentColor": { "type": "string" }
+          }
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "Note": {
+      "title": "Note",
+      "description": "A study note created by a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "An assignment or study task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["todo", "in-progress", "done"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "subjectId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "status"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "A course or academic subject",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "color": { "type": "string" }
+      }
+    },
+    "TimetableEntry": {
+      "title": "TimetableEntry",
+      "description": "A class or event in the schedule",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "day": { "type": "integer", "description": "0-6 for Mon-Sun" },
+        "startTime": { "type": "string", "description": "HH:mm" },
+        "endTime": { "type": "string" },
+        "location": { "type": "string" }
+      }
+    },
+    "StudySession": {
+      "title": "StudySession",
+      "description": "A Pomodoro study session log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "duration": { "type": "integer", "description": "Duration in minutes" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "User profiles" },
+    "/users/{userId}/notes/{noteId}": { "schema": "Note", "description": "Notes for a user" },
+    "/users/{userId}/tasks/{taskId}": { "schema": "Task", "description": "Tasks for a user" },
+    "/users/{userId}/subjects/{subjectId}": { "schema": "Subject", "description": "Academic subjects for a user" },
+    "/users/{userId}/timetable/{entryId}": { "schema": "TimetableEntry", "description": "Schedule for a user" },
+    "/users/{userId}/sessions/{sessionId}": { "schema": "StudySession", "description": "Pomodoro sessions for a user" }
+  }
+}
